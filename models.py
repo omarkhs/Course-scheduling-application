@@ -9,7 +9,7 @@ from datetime import timedelta
 class Course():
     """ A class for courses """
 
-    def __init__(self, department, course_number, title):
+    def __init__(self, department, course_number, title=""):
         """
         :param department: e.g. CPSC, MATH, ENGL, etc..
         :param course_number: e.g. 110, 121, 210, etc..
@@ -38,6 +38,18 @@ class Course():
         :returns: list of activities associated with the course
         """
         return self.activities
+
+    def get_department(self):
+        """
+        :returns: department in which this course is under
+        """
+        return self.department
+
+    def get_course_number(self):
+        """
+        :returns: course number
+        """
+        return self.course_number
 
 
 class ActivityType(Enum):
