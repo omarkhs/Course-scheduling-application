@@ -6,53 +6,79 @@ from enum import Enum
 from datetime import timedelta
 
 
-class ActivityType(Enum):
-    """ An enum type for different types of sections: lab, lecture, tutorial"""
-    LECTURE = "Lecture"
-    TUTORIAL = "Tutorial"
-    LAB = "Lab"
-
-
 class Course():
     """ A class for courses """
 
-    # TODO: add rest of attributes and methods
     def __init__(self, department, course_number, title):
-        """ Initialize Course and its attributes"""
+        """
+        :param department: e.g. CPSC, MATH, ENGL, etc..
+        :param course_number: e.g. 110, 121, 210, etc..
+        :param title: e.g. Software Construction, Strategies for University Writing, etc..
+        """
         self.department = department
         self.course_number = course_number
         self.title = title
-        self.activites = []
+        self.activities = []  # List of activities for the course (e.g. different lab/lecture/tutorial sections)
 
     def add_activity(self, activity):
+        """
+        Adds an activity associated with the course
+        :param activity: lecture or lab or tutorial that is associated with the course
+        """
         self.activities.append(activity)
+
+    def remove_activity(self, activity):
+        """
+        Removes an activity from the list of activities
+        """
+        self.activities.remove(activity)
+
+    def get_activities(self):
+        """
+        :returns: list of activities associated with the course
+        """
+        return self.activities
+
+
+class ActivityType(Enum):
+    """ An enum type for different types of activities: lecture, lab, tutorial"""
+    LECTURE = "Lecture"
+    LAB = "Lab"
+    TUTORIAL = "Tutorial"
 
 
 class Activity():
-    """ A class for activities. An activity can be either a lecture, lab, tutorial"""
-    # TODO: add rest of methods
-    def __init__(self, section_number, section_type):
-        """ Initialize Activity and its attributes.
-            section_type refers to whether it is a lab, lecture, or tutorial
+    """ A class for activities which can be either a lecture, lab, tutorial"""
+
+    def __init__(self, activity_number, activity_type):
         """
-        self.section_number = section_number
-        self.section_type = section_type
+        :param activity_number: this refers to the section number (e.g. L1B, T1A, etc..)
+        :param activity_type: Either lecture, lab, or tutorial
+        """
+        self.activity_number = activity_number
+        self.activity_type = activity_type
+
+    def is_lecture(self):
+        """ :returns true if the activity is a lecture"""
+        return self.activity_type == ActivityType.LECTURE
+
+    def is_tutorial(self):
+        """ :returns true if the activity is a tutorial"""
+        return self.activity_type == ActivityType.TUTORIAL
 
     def is_lab(self):
-        """
-        Returns true if the activity is a lab
-        """
-        # TODO:
-        return self.section_type == ActivityType.LAB
+        """ :returns true if the activity is a lab"""
+        return self.activity_type == ActivityType.LAB
 
-    # TODO the rest of checks
-    #TODO link the associated ActivityTime so the mapping is one to one
 
 class ActivityTime():
     """ a class for time and days of the activity"""
 
-    def __init__(self, activity): # passing the activity that will be associated with the activityTime object
-        """ Initialize ActivityTime and its attributes"""
+    def __init__(self, activity):
+        """
+        Initialize ActivityTime and its attributes
+        :param activity:  The activity that will be associated with the activityTime object
+        """
         self.activity = activity
         self.days = []
         self.start_time = None
@@ -72,7 +98,7 @@ class ActivityTime():
 
     def get_associated_activity(self):
         """
-        :return: the associated activity with the ActivityTime
+        returns the associated activity with the ActivityTime
         """
         return self.activity
 
@@ -98,8 +124,8 @@ class ActivityTime():
 
 
 class TimeTable():
-    def __init__(self, days):
-        self.days_dict = {'sun': [], 'mon': [], 'tue': [], 'wed': [],'thu': [],'fri': [],'sat': []}
+    def __init__(self):
+        self.days_dict = {'sun': [], 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [], 'sat': []}
 
     def add_activity(self, activityTime):
         """
@@ -114,7 +140,7 @@ class TimeTable():
                 self.days_dict[day].append(activityTime.get_associated_activity())
 
             else:
-                break  # maybe print an error ?
+                break  # maybe print an error or throw an exception ?
 
     def remove_activity(self, activityTime):
         """
@@ -125,7 +151,7 @@ class TimeTable():
             if day in self.days_dict:  # this check is imp to avoid adding extra k:v to the dict beyond the 7 keys
                 day_list = self.days_dict[day]
                 day_list.remove(activityTime.get_associated_activity())
-                updated_value = {day : day_list}
-                self.days_dict.update(updated_value) # updates the value of the key
+                updated_value = {day: day_list}
+                self.days_dict.update(updated_value)  # updates the value of the key
             else:
-                break # maybe print an error ?
+                break   # maybe print an error or throw an exception ?
