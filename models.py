@@ -6,12 +6,47 @@ from enum import Enum
 from datetime import timedelta
 
 
-class SectionType(Enum):
+class ActivityType(Enum):
     """ An enum type for different types of sections: lab, lecture, tutorial"""
     LECTURE = "Lecture"
     TUTORIAL = "Tutorial"
     LAB = "Lab"
 
+
+class Course():
+    """ A class for courses """
+
+    # TODO: add rest of attributes and methods
+    def __init__(self, department, course_number, title):
+        """ Initialize Course and its attributes"""
+        self.department = department
+        self.course_number = course_number
+        self.title = title
+        self.activites = []
+
+    def add_activity(self, activity):
+        self.activities.append(activity)
+
+
+class Activity():
+    """ A class for activities. An activity can be either a lecture, lab, tutorial"""
+
+    # TODO: add rest of methods
+    def __init__(self, section_number, section_type):
+        """ Initialize Activity and its attributes.
+            section_type refers to whether it is a lab, lecture, or tutorial
+        """
+        self.section_number = section_number
+        self.section_type = section_type
+
+    def is_lab(self):
+        """
+        Returns true if the activity is a lab
+        """
+        # TODO:
+        return self.section_type == ActivityType.LAB
+
+    # TODO the rest of checks
 
 class ActivityTime():
     """ a class for time and days of the activity"""
@@ -55,37 +90,17 @@ class ActivityTime():
         return self.end_time - self.start_time
 
 
-class Activity():
-    """ A class for activities. An activity can be either a lecture, lab, tutorial"""
+class TimeTable():
+    def __init__(self, days):
+        self.days = {'sun': [], 'mon': [], 'tue': [], 'wed': [],'thu': [],'fri': [],'sat': []}
 
-    # TODO: add rest of methods
-    def __init__(self, section_number, section_type):
-        """ Initialize Activity and its attributes.
-            section_type refers to whether it is a lab, lecture, or tutorial
+    def add_activity_time(self, activityTime):
         """
-        self.section_number = section_number
-        self.section_type = section_type
-
-    def is_lab(self):
+        Adds the activityTime object to the time table to the corresponding day
         """
-        Returns true if the activity is a lab
-        """
-        # TODO:
-        return self.section_type == SectionType.LAB
-
-    # TODO the rest of checks
-
-
-class Course():
-    """ A class for courses """
-
-    # TODO: add rest of attributes and methods
-    def __init__(self, department, course_number, title):
-        """ Initialize Course and its attributes"""
-        self.department = department
-        self.course_number = course_number
-        self.title = title
-        self.activites = []
-
-    def add_activity(self, activity):
-        self.activities.append(activity)
+        activity_days = activityTime.get_days()
+        for day in activity_days:  # iterate over the list of days of the given activity
+            if day in self.days:  # in case there is a discrepancy in naming
+                self.days[day].append(activityTime)
+            else:
+                break  # maybe print an error ?
