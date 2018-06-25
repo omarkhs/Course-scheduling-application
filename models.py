@@ -1,4 +1,5 @@
 # Course model
+
 import calendar
 from enum import Enum
 

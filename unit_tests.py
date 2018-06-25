@@ -18,7 +18,7 @@ class TestStringMethods(unittest.TestCase):
             s.split(2)
 
     def setUp(self):
-        self.course = models.Course("CPSC","210")
+        self.course = models.Course("CPSC", "210")
         self.assertEqual(self.course.department, "CPSC")
         self.assertEqual(self.course.course_number, "210")
 
@@ -37,6 +37,7 @@ class TestStringMethods(unittest.TestCase):
     def test_removing_activities(self):
         self.course.remove_section(self.activity)
         self.assertEquals(len(self.course.get_sections()), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
