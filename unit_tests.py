@@ -22,21 +22,21 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(self.course.department, "CPSC")
         self.assertEqual(self.course.course_number, "210")
 
-        self.activity = models.Activity("L1A", models.ActivityType.LAB)
+        self.activity = models.Section("L1A", models.SectionType.LAB)
         self.assertEqual(self.activity.is_lab(), True)
 
-        self.course.add_activity(self.activity)
-        self.assertEquals(len(self.course.get_activities()), 1)
+        self.course.add_section(self.activity)
+        self.assertEquals(len(self.course.get_sections()), 1)
 
     def test_adding_activities(self):
-        tutorial = models.Activity("T1B", models.ActivityType.TUTORIAL)
+        tutorial = models.Section("T1B", models.SectionType.TUTORIAL)
         self.assertEqual(tutorial.is_tutorial(), True)
-        self.course.add_activity(tutorial)
-        self.assertEquals(len(self.course.get_activities()), 2)
+        self.course.add_section(tutorial)
+        self.assertEquals(len(self.course.get_sections()), 2)
 
     def test_removing_activities(self):
-        self.course.remove_activity(self.activity)
-        self.assertEquals(len(self.course.get_activities()), 0)
+        self.course.remove_section(self.activity)
+        self.assertEquals(len(self.course.get_sections()), 0)
 
 if __name__ == '__main__':
     unittest.main()
