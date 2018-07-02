@@ -1,5 +1,4 @@
 # Course model
-
 import calendar
 from enum import Enum
 
@@ -85,11 +84,17 @@ class Section:
         adds section time object to the end list of sections
         :param section_time: section time object associated with this section
         """
-        self.section_times.append(section_time)
+        if self.section_times.__contains__(section_time):
+            return
+        else:
+            self.section_times.append(section_time)
 
     def remove_section_time(self, section_time):
         """ removes section time object from the list of sections """
-        self.section_times.remove(section_time)
+        if self.section_times.__contains__(section_time):
+            self.section_times.remove(section_time)
+        else:
+            return
 
     def get_section_times(self):
         """ :return: list of sections times associated with this section """
@@ -109,7 +114,6 @@ class Section:
 
 
 class SectionTime:
-    # TODO in order for the timetable to work we need to be able to compare section time objects
     """ a class for time and days of the section"""
 
     def __init__(self, section, start_time, end_time):
@@ -191,7 +195,7 @@ class TimeTable:
 
             # iterates over the list of section times of the section
             for section_time in list_of_section_times:
-                list_of_section_days = section_time.get_days
+                list_of_section_days = section_time.get_days()
 
                 # iterates over the list of days during which one of the course sections runs
                 for day in list_of_section_days:
@@ -208,20 +212,17 @@ class TimeTable:
             list_of_section_times = section.get_section_times()
 
             for section_time in list_of_section_times:
-                list_of_section_days = section_time.get_days
+                list_of_section_days = section_time.get_days()
 
                 for day in list_of_section_days:
                     # the check below is important to avoid adding extra key;value pair to the dictionary
                     if day in self.days_dict:
                         # the_list_of_values_of_day == list of section time objects associated with the day (ie key)
                         list_of_values_of_day = self.days_dict[day]
-
-                        # TODO for correct impl need to override comparison method to compare section time objects
                         list_of_values_of_day.remove(section_time)
                         updated_values = {day: list_of_values_of_day}
                         # updates the list of values of the key
                         self.days_dict.update(updated_values)
 
                     else:
-                        # TODO: print an error or throw an exception
                         break
