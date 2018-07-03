@@ -91,23 +91,26 @@ class TestModels(unittest.TestCase):
         self.set_section_time(self.section, calendar.TUESDAY, 12, 13)
         self.set_section_time(self.section, calendar.THURSDAY, 15, 17)
 
+        numbers = [0, 1, 0, 1, 0, 0, 0]
         self.time_table.add_course_sections(self.course)
-        self.assertEquals(self.check_correct_time_table([0, 1, 0, 1, 0, 0, 0]), True)
+        self.assertEquals(self.check_correct_time_table(numbers), True)
 
+        numbers = [1, 2, 1, 2, 1, 0, 0]
         self.populate_each_day_in_time_table()
-        self.assertEquals(self.check_correct_time_table([1, 2, 1, 2, 1, 0, 0]), True)
+        self.assertEquals(self.check_correct_time_table(numbers), True)
 
     def test_remove_course_from_timeTable(self):
         self.set_section_time(self.section, calendar.TUESDAY, 12, 13)
         self.set_section_time(self.section, calendar.THURSDAY, 15, 17)
         self.time_table.add_course_sections(self.course)
 
+        numbers = [1, 2, 1, 2, 1, 0, 0]
         self.populate_each_day_in_time_table()
-        self.assertEquals(self.check_correct_time_table([1, 2, 1, 2, 1, 0, 0]), True)
+        self.assertEquals(self.check_correct_time_table(numbers), True)
 
+        numbers = [1, 1, 1, 1, 1, 0, 0]
         self.time_table.remove_course_sections(self.course)
-        self.assertEquals(self.check_correct_time_table([1, 1, 1, 1, 1, 0, 0]), True)
-
+        self.assertEquals(self.check_correct_time_table(numbers), True)
 
     # a method that creates section time and adds it to self.section
     # later I will create a method that randomly generates data
