@@ -70,34 +70,32 @@ class TestModels(unittest.TestCase):
         self.assertEquals(len(section_times), 1)
 
         section_time = section_times[0]
-        self.assertEquals(section_time.get_duration().total_seconds(), 3600)
+        self.assertEquals(str(section_time.get_duration()), "1:00:00")
 
     def test_add_course_to_timeTable(self):
         self.set_section_time(self.section, calendar.TUESDAY, 12, 13)
         self.set_section_time(self.section, calendar.THURSDAY, 15, 17)
         self.assertEquals(len(self.section.get_section_times()), 2)
-        self.time_table.add_course_sections(self.course)
 
-        self.assertEquals(len(self.mon), 0)
-        self.assertEquals(len(self.tue), 1)
-        self.assertEquals(len(self.wed), 0)
-        self.assertEquals(len(self.thu), 1)
-        self.assertEquals(len(self.fri), 0)
+        numbers = [0, 0, 0, 0, 0, 0, 0]
+        self.assertEquals(self.check_correct_time_table(numbers), True)
+
+        numbers = [0, 0, 0, 0, 0, 0, 1]
+        self.assertEquals(self.check_correct_time_table(numbers), False)
+
+        numbers = [0, 1, 0, 1, 0, 0, 0]
+        self.time_table.add_course_sections(self.course)
+        self.assertEquals(self.check_correct_time_table(numbers), True)
 
     def test_add_non_conflicting_courses_to_timeTable(self):
         self.set_section_time(self.section, calendar.TUESDAY, 12, 13)
         self.set_section_time(self.section, calendar.THURSDAY, 15, 17)
+
         self.time_table.add_course_sections(self.course)
+        self.assertEquals(self.check_correct_time_table([0, 1, 0, 1, 0, 0, 0]), True)
 
         self.populate_each_day_in_time_table()
-
-        self.assertEquals(len(self.mon), 1)
-        self.assertEquals(len(self.tue), 2)
-        self.assertEquals(len(self.wed), 1)
-        self.assertEquals(len(self.thu), 2)
-        self.assertEquals(len(self.fri), 1)
-        self.assertEquals(len(self.sat), 0)
-        self.assertEquals(len(self.sun), 0)
+        self.assertEquals(self.check_correct_time_table([1, 2, 1, 2, 1, 0, 0]), True)
 
     def test_remove_course_from_timeTable(self):
         self.set_section_time(self.section, calendar.TUESDAY, 12, 13)
@@ -105,24 +103,11 @@ class TestModels(unittest.TestCase):
         self.time_table.add_course_sections(self.course)
 
         self.populate_each_day_in_time_table()
-
-        self.assertEquals(len(self.mon), 1)
-        self.assertEquals(len(self.tue), 2)
-        self.assertEquals(len(self.wed), 1)
-        self.assertEquals(len(self.thu), 2)
-        self.assertEquals(len(self.fri), 1)
-        self.assertEquals(len(self.sat), 0)
-        self.assertEquals(len(self.sun), 0)
+        self.assertEquals(self.check_correct_time_table([1, 2, 1, 2, 1, 0, 0]), True)
 
         self.time_table.remove_course_sections(self.course)
+        self.assertEquals(self.check_correct_time_table([1, 1, 1, 1, 1, 0, 0]), True)
 
-        self.assertEquals(len(self.mon), 1)
-        self.assertEquals(len(self.tue), 1)
-        self.assertEquals(len(self.wed), 1)
-        self.assertEquals(len(self.thu), 1)
-        self.assertEquals(len(self.fri), 1)
-        self.assertEquals(len(self.sat), 0)
-        self.assertEquals(len(self.sun), 0)
 
     # a method that creates section time and adds it to self.section
     # later I will create a method that randomly generates data
@@ -144,18 +129,28 @@ class TestModels(unittest.TestCase):
         comm_course = Course("COMM", "458")
         comm_section = Section("T2C", SectionType.TUTORIAL)
         comm_course.add_section(comm_section)
-        self.set_section_time(comm_section, calendar.MONDAY, 13, 14)  # occurs on a mon
-        self.set_section_time(comm_section, calendar.WEDNESDAY, 13, 14)  # occurs on a wed
-        self.set_section_time(comm_section, calendar.FRIDAY, 13, 14)  # occurs on a fri
+        self.set_section_time(comm_section, calendar.MONDAY, 13, 14)
+        self.set_section_time(comm_section, calendar.WEDNESDAY, 13, 14)
+        self.set_section_time(comm_section, calendar.FRIDAY, 13, 14)
         self.time_table.add_course_sections(comm_course)
 
         cpsc_course = Course("CPSC", "310")
         cpsc_section = Section("101", SectionType.LECTURE)
         cpsc_course.add_section(cpsc_section)
-        self.set_section_time(cpsc_section, calendar.TUESDAY, 13, 14)  # occurs on a tue
-        self.set_section_time(cpsc_section, calendar.THURSDAY, 13, 14)  # occurs on a thu
+        self.set_section_time(cpsc_section, calendar.TUESDAY, 13, 14)
+        self.set_section_time(cpsc_section, calendar.THURSDAY, 13, 14)
         self.time_table.add_course_sections(cpsc_course)
 
+    def check_correct_time_table(self, numbers):
+        values = self.time_table.days_dict.values()
+        values_lengths = []
+        for value in values:
+            values_lengths.append(len(value))
+
+        for i in range(len(values_lengths)):
+            if numbers[i] != values_lengths[i]:
+                return False
+        return True
 
 if __name__ == '__main__':
     unittest.main()
