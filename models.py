@@ -84,17 +84,11 @@ class Section:
         adds section time object to the end list of sections
         :param section_time: section time object associated with this section
         """
-        if self.section_times.__contains__(section_time):
-            return
-        else:
-            self.section_times.append(section_time)
+        self.section_times.append(section_time)
 
     def remove_section_time(self, section_time):
         """ removes section time object from the list of sections """
-        if self.section_times.__contains__(section_time):
-            self.section_times.remove(section_time)
-        else:
-            return
+        self.section_times.remove(section_time)
 
     def get_section_times(self):
         """ :return: list of sections times associated with this section """
