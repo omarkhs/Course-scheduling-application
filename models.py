@@ -167,6 +167,7 @@ class SectionTime:
         """ return end time of section """
         return self.end_time
 
+
     def get_duration(self):
         """
         return the duration of the section
@@ -188,19 +189,16 @@ class TimeTable:
         Adds all sections of the given course to the corresponding day in the TimeTable object
         :param course: given course (e.g. CPSC 210)
         """
-        list_of_sections = course.get_sections()
-        # iterates over the list of sections in the given course
-        for section in list_of_sections:
-            list_of_section_times = section.get_section_times()
+        def add_section_time(section_time):
+            for day in section_time.get_days():
+                self.days_dict[day].append(section_time)
 
-            # iterates over the list of section times of the section
-            for section_time in list_of_section_times:
-                list_of_section_days = section_time.get_days()
+        section_times = ( section_time for section in course.get_sections()
+                                       for section_time in
+                                       section.get_section_times() )
 
-                # iterates over the list of days during which one of the course sections runs
-                for day in list_of_section_days:
-                    # section time object is added to the list of the corresponding day in the dictionary
-                    self.days_dict[day].append(section_time)
+        for section_time in section_times:
+            add_section_time(section_time)
 
     def remove_course_sections(self, course):
         """
