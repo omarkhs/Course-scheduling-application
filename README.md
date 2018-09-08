@@ -6,4 +6,4 @@ Mentor: Ahmed Elmaghraby
 
 Date: June 20th, 2018
 
-Application Description to be updated later
+A course scheduling application for univeristy/college courses
